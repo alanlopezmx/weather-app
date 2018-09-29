@@ -11,6 +11,12 @@ import {
     WINDY
 } from '../../constants/weather';
 
+const location = "Buenos Aires,ar";
+const api_key = "5be96d5810de63a33a94ced791487a90";
+const url_base_weather = "http://api.openweathermap.org/data/2.5/weather";
+
+const api_weather = `${url_base_weather}?q=${location}&appid=${api_key}`;
+
 const data = {
     temperature: 6,
     weatherState: SUN,
@@ -34,6 +40,13 @@ class WeatherLocation extends Component {
         };
     }
     handleUpdateClick = () =>{
+        fetch(api_weather).then( resolve => {
+            return resolve.json();
+        }).then(data => {
+            console.log(data);
+            debugger;
+        });
+
         console.log("Actualizado");
         this.setState({
             city: "Buenos Aires!",
