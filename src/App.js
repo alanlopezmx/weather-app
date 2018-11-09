@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
+import {Grid,Row,Col} from 'react-flexbox-grid';
 import LocationList from './components/LocationList';
 
 const cities = [
@@ -11,10 +12,16 @@ const cities = [
     "Lima,pe"
 ];
 class App extends Component {
+  handleSelectedLocation = city => {
+
+    console.log(`handleSelectedLocation ${city}`);
+  }
   render() {
     return (
       <div className="App">
-        <LocationList cities={cities}/>
+        <LocationList 
+            cities={cities}
+            onSelectedLocation={this.handleSelectedLocation}/>
       </div>
     );
   }
