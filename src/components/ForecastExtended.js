@@ -28,21 +28,40 @@ class ForecastExtended extends Component {
     }
 
     componentDidMount(){
-        const url_forecast = `${CONSTANTS.url_base_weather_forecast}?q=${this.props.city}&appid=${CONSTANTS.api_key}`;
+        this.updateCity(this.props.city);
+    }
+
+    componentWillReceiveProps(nextProps){
+        if(nextProps.city !== this.props.city){
+            this.setState( { forecastData: null } );
+            this.updateCity(nextProps.city);
+        }
+    }
+
+
+    updateCity = city => {
+        const url_forecast = `${CONSTANTS.url_base_weather_forecast}?q=${city}&appid=${CONSTANTS.api_key}`;
 
         fetch(url_forecast)
         .then( data =>(data.json())
         .then( weather_data => {
             console.log(weather_data);
             const forecastData = transformForecast(weather_data);
+            console.log(forecastData);
             this.setState({ forecastData })
         })
         );
     }
 
-    renderForecastItemDays(){
-        return (<h1>Render items</h1>);
-        //return days.map(day => <ForecastItem weekDay={day} hour={10} data={data}></ForecastItem>)
+    renderForecastItemDays(forecastData){
+        //return (<h1>Render items</h1>);
+        return forecastData.map(forecast => 
+        <ForecastItem
+            key={`${forecast.weekDay}${forecast.hour}`}
+            weekDay={forecast.weekDay} 
+            hour={forecast.hour} 
+            data={forecast.data}>
+        </ForecastItem>)
     }
     renderProgress(){
         return (<h3>Cargando pronostico extendido</h3>);
@@ -50,12 +69,13 @@ class ForecastExtended extends Component {
 
 
     render(){
+        console.log('render forecast extended');
         const {city} = this.props;
         const { forecastData } = this.state;
         return (
         <div>
             <h2 className='forecast-title'>Pronostico extendido para {city}</h2>
-            {forecastData ? this.renderForecastItemDays() : this.renderProgress()}
+            {forecastData ? this.renderForecastItemDays(forecastData) : this.renderProgress()}
         </div>
         );
     }
